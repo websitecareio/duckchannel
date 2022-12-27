@@ -10,5 +10,10 @@ I made this with HTML, JS and jQuery to make sure it worked on all devices. I am
 ## Features
 * Export all streaming services
 * Import data
-* Remove all data ( Usefull on first setup to remove default streaming services)
+* Remove all data
 * Import your movies on the current device into the site
+
+
+## Backup backup backup
+Remember to backup your data by using the export data function. In case you clear your browser data, it will be lost because data are stored in local storage.
+By having the export data, you can import it again if needed by using the import data function.
