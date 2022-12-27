@@ -23,11 +23,19 @@ img { max-width: 100%;}
 .listservicesrowitem {
     padding:0px !important;
 }
-.listservicesrowitem img {
+
+.listservicesrowitem .innerdiv{
+  display: flex;
+    background: #000 !important;
+    width: 100%;
+    height: 100%;
+    padding: 5%;
+}
+.listservicesrowitem div img {
     filter: grayscale(100%);
 }
 
-.listservicesrowitem:hover img {
+.listservicesrowitem:hover div img {
     filter: grayscale(0%);
 }
 span.servicetitle {
@@ -123,7 +131,7 @@ span.servicetitle {
                 <div class="col-md-12 text-center footer">
                     <p class=" my-4" style="color:#fff;">Entertainment at Your Fingertips • <a href="https://github.com/websitecareio/duckchannel" target="_blank" style="color:#fff;text-decoration: underline;">GitHub</a></span>
                         <br>
-                        <a class="" href="#" id="exportdata" onclick="exportData()" target="_blank" style="color:#424242;">Export data</a> | <a class="" href="#" id="exportdata" data-target="#importModal" data-toggle="modal" style="color:#424242;">Import</a> | <a class="" href="#" id="exportdata" onclick="return clearData()" style="color:#424242;">Remove all data</a>
+                        <a class="" href="#" id="exportdata" onclick="exportData()" target="_blank" style="color:#424242;">Export data</a> | <a class="" href="#" id="exportdata" data-target="#importModal" data-toggle="modal" style="color:#424242;">Import data</a> | <a class="" href="#" id="exportdata" onclick="return clearData()" style="color:#424242;">Remove all data</a>
               
                     </div>
 
@@ -231,7 +239,7 @@ span.servicetitle {
         var image = duckdata[i].image;
         var url = duckdata[i].url;
         // Output the title value to the page
-        document.getElementById("listservicesrow").innerHTML += "<div class=\"col-md-3 px-4 py-4  listservicesrowitem d-flex \"><img src=\""+image+"\"><span class=\"servicetitle  mx-4 my-4\">"+title+"</span></div>";
+        document.getElementById("listservicesrow").innerHTML += "<div class=\"col-md-3 px-4 py-4  listservicesrowitem d-flex \"><div class=\"innerdiv\"><a href=\""+url+"\" target=\"_blank\"><img src=\""+image+"\"><span class=\"servicetitle  mx-4 my-4\">"+title+"</span></a></div></div>";
         }
     }
 }
