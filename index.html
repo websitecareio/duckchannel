@@ -99,8 +99,8 @@ span.servicetitle {
                     </div>
                     <div class="col-md-8 form-inline justify-content-center">
                             <form class="form-inline ml-auto mr-auto">
-                                <input class="form-control" type="text" placeholder="Start your search..." /> 
-                                <button class="btn btn-primary my-2 my-sm-0 btnsearch" type="submit">Search</button>
+                                <input class="form-control" type="text" id="searchinput" placeholder="Start your search..." onkeyup="filterElements()" /> 
+                                <button class="btn btn-primary my-2 my-sm-0 btnsearch" type="submit" onclick="filterElements()">Search</button>
                             </form>
                         </div>
                         <div class="col-md-2 text-right">
@@ -239,7 +239,7 @@ span.servicetitle {
         var image = duckdata[i].image;
         var url = duckdata[i].url;
         // Output the title value to the page
-        document.getElementById("listservicesrow").innerHTML += "<div class=\"col-md-3 px-4 py-4  listservicesrowitem d-flex \"><div class=\"innerdiv\"><a href=\""+url+"\" target=\"_blank\"><img src=\""+image+"\"><span class=\"servicetitle  mx-4 my-4\">"+title+"</span></a></div></div>";
+        document.getElementById("listservicesrow").innerHTML += "<div class=\"col-md-3 px-4 py-4  listservicesrowitem\"><div class=\"innerdiv\"><a href=\""+url+"\" target=\"_blank\"><img src=\""+image+"\"><span class=\"servicetitle  mx-4 my-4\">"+title+"</span></a></div></div>";
         }
     }
 }
@@ -340,6 +340,29 @@ function importData() {
   $("#importModal").modal("hide");
 }
 
+
+// Search function
+function filterElements() {
+ 
+  // Get the value of the filter input
+  var filterValue = document.getElementById("searchinput").value.toLowerCase();
+ 
+  // Get all the element divs
+  var elements = document.getElementById("listservicesrow").getElementsByClassName("listservicesrowitem");
+
+  // Loop through the elements
+  for (var i = 0; i < elements.length; i++) {
+    // Get the text content of the element
+    var elementText = elements[i].textContent.toLowerCase();
+
+    // If the element text includes the filter value, show the element; otherwise, hide it
+    if (elementText.includes(filterValue)) {
+      elements[i].style.display = "";
+    } else {
+      elements[i].style.display = "none";
+    }
+  }
+}
   </script>
 
 </body>
