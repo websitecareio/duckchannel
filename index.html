@@ -116,6 +116,29 @@
 
       border-radius: 0 0.25rem 0.25rem 0 !important;
     }
+
+    .listnotes li:hover .removenote {
+      display: block !important;
+    }
+
+    #listnotes {
+    list-style: none;
+    margin-left: -30px;
+}
+#listnotes .row {
+    color: #fff;
+    position: relative;
+    margin-bottom:10px;
+}
+
+#listnotes .row:hover .removenote {
+  display:block !important;
+  position: absolute;
+      top: 10%;
+      right: 10%;
+      z-index: 999;
+      color: #424242;
+}
   </style>
 </head>
 
@@ -166,11 +189,14 @@
       <!-- Streaming services -->
       <div class="row px-4 py-4">
         <div class="col-md-2">
-          <div class="page-header">
+          <div class="page-header py-4">
             <h1>
               Your streaming services<br><small>A list you have created for your entertainment</small>
             </h1>
           </div>
+          <h3 class="py-4">Notes <a href="#" style="color:#424242" data-toggle="modal" data-target="#notesModal">+</a>
+          </h3>
+          <ul id="listnotes"></ul>
         </div>
         <div class="col-md-10" id="listservices">
           <div class="row d-flex align-items-stretch" id="listservicesrow"><!-- Row output here --></div>
@@ -184,10 +210,13 @@
               href="https://github.com/websitecareio/duckchannel" target="_blank"
               style="color:#fff;text-decoration: underline;">GitHub</a></span>
             <br>
-            <a class="" href="#" id="exportdata" onclick="exportData()" target="_blank" style="color:#424242;">Export
-              data</a> | <a class="" href="#" id="exportdata" data-target="#importModal" data-toggle="modal"
-              style="color:#424242;">Import data</a> | <a class="" href="#" id="exportdata" onclick="return clearData()"
-              style="color:#424242;">Remove all data</a>
+            <a class="" href="#" id="exportStreamData" onclick="exportStreamData()" target="_blank"
+              style="color:#424242;">Export stream 
+              data</a> | <a class="" href="#" id="exportNotesData" onclick="exportNotesData()" target="_blank"
+              style="color:#424242;">Export notes 
+              data</a>  | <a class="" href="#" id="importData" data-target="#importModal" data-toggle="modal"
+              style="color:#424242;">Import data</a> | <a class="" href="#" id="importData"
+              onclick="return clearData()" style="color:#424242;">Remove all data</a>
 
         </div>
 
@@ -256,6 +285,13 @@
           </button>
         </div>
         <div class="modal-body">
+          <div class="form-group">
+            <label for="importType">Type of data</label>
+            <select class="form-control" id="importType" name="importType" required>
+              <option value="duckdata">Streaming data</option>
+              <option value="ducknotes">Notes data</option>
+            </select>
+          </div>
           <form id="importForm">
             <div class="form-group">
               <label for="importField">Data</label>
@@ -319,6 +355,32 @@
     </div>
   </div>
 
+  <!-- Notes Modal -->
+  <div class="modal fade" id="notesModal" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="notesModalLabel">Add note</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Note input field -->
+          <div class="form-group">
+            <label for="noteInput">Note</label>
+            <input type="text" class="form-control" id="noteInput" placeholder="Enter note">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="saveNote()">Save note</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
     integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -334,6 +396,7 @@
 
   <script>
     loadServices();
+    loadNotes();
 
 
     // Load services data
@@ -351,6 +414,21 @@
           var url = duckdata[i].url;
           // Output the title value to the page
           document.getElementById("listservicesrow").innerHTML += "<div class=\"col-md-3 px-4 py-4  listservicesrowitem\"><div class=\"innerdiv\"><a class=\"editlink\" style=\"display:none;\" href=\"#\" data-toggle=\"modal\" data-target=\"#editModal\" onclick=\"loadEditForm(event," + [i] + ")\">Edit</a><a class=\"removelink\" style=\"display:none;\" href=\"#\" onclick=\"return removeElement(event," + [i] + ")\">Remove</a><a href=\"" + url + "\" target=\"_blank\"><img src=\"" + image + "\"><span class=\"servicetitle  mx-4 my-4\">" + title + "</span></a></div></div>";
+        }
+      }
+    }
+
+    // Load services data
+    function loadNotes() {
+      // Check if the duckdata array exists in local storage
+      if (localStorage.getItem("ducknotes") !== null) {
+        // If it does, get the array and loop through the items
+        var duckdata = JSON.parse(localStorage.getItem("ducknotes"));
+        for (var i = 0; i < duckdata.length; i++) {
+          // Get the title value of each item
+          var note = duckdata[i];
+          // Output the title value to the page
+          document.getElementById("listnotes").innerHTML += "<div class=\"row\"><div class=\"col-md-9\">" + note + "</div><div class=\"col-md-3\"> <a href=\"#\" class=\"removenote\" style=\"display:none;\" onclick=\"return removeNote(" + i + ")\">Remove</a></div></div>";
         }
       }
     }
@@ -403,7 +481,7 @@
     }
 
     // Export data
-    function exportData() {
+    function exportStreamData() {
 
       // Check if the data array exists in local storage
       if (localStorage.getItem("duckdata") !== null) {
@@ -416,7 +494,30 @@
         var blob = new Blob([data], { type: "text/plain" });
 
         // Create a download link for the Blob object
-        var download = document.getElementById("exportdata");
+        var download = document.getElementById("exportStreamData");
+        download.href = URL.createObjectURL(blob);
+
+      } else {
+        console.log("No data found..");
+      }
+
+    }
+
+    // Export notes data
+    function exportNotesData() {
+
+      // Check if the data array exists in local storage
+      if (localStorage.getItem("ducknotes") !== null) {
+
+        console.log("Exporting...");
+        // If it does, get the array and convert it to a string
+        var data = JSON.stringify(JSON.parse(localStorage.getItem("ducknotes")));
+
+        // Create a Blob object containing the data string
+        var blob = new Blob([data], { type: "text/plain" });
+
+        // Create a download link for the Blob object
+        var download = document.getElementById("exportNotesData");
         download.href = URL.createObjectURL(blob);
 
       } else {
@@ -442,13 +543,14 @@
 
     function importData() {
       // Get the data from the textarea field
+      var type = document.getElementById("importType").value;
       var data = document.getElementById("importField").value;
 
       // Parse the data into a JavaScript object
       var dataObject = JSON.parse(data);
 
       // Store the data object in local storage
-      localStorage.setItem("duckdata", JSON.stringify(dataObject));
+      localStorage.setItem(type, JSON.stringify(dataObject));
 
       // Close the modal
       $("#importModal").modal("hide");
@@ -552,8 +654,49 @@
 
     }
 
+    function saveNote() {
+      // Get the note input field
+      var input = document.getElementById("noteInput");
+
+      // Get the current notes from local storage
+      var notes = JSON.parse(localStorage.getItem("ducknotes")) || [];
+
+      // Add the new note to the collection
+      notes.push(input.value);
+
+      // Store the updated notes in local storage
+      localStorage.setItem("ducknotes", JSON.stringify(notes));
+
+      // Clear the input field
+      input.value = "";
+
+      // Close the modal
+      $("#notesModal").modal("hide");
+    }
 
 
+    function removeNote(id) {
+
+if (confirm("Are you sure you want to remove this?")) {
+  // Clear all data from local storage
+
+  var duckdata = JSON.parse(localStorage.getItem("ducknotes"));
+
+  // Remove the item from the collection
+  duckdata.splice(id, 1); // Start from, delete 1 item
+
+  // Store the updated collection in local storage
+  localStorage.setItem("ducknotes", JSON.stringify(duckdata));
+
+
+  return true;
+} else {
+  // Do not clear the data
+  return false;
+}
+
+
+}
   </script>
 
 </body>
