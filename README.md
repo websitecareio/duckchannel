@@ -1,6 +1,9 @@
 # duckchannel
 This is not yet ready for use.
 
+Live demo here: https://websitecareio.github.io/streamtab/
+The demo is the actual code from the index.html file, you can use it as your streamtab if you want or download the files and hosted it yourself.
+
 ## Purpose of this
 I wanted a way to save the streaming services i use on a list and be able to click to open them, for me to be able to stream to my tv or projector easyly and without having to turn on some 3rd device that uses a lot of power to watch something. I opted for a reaspberyrpi and have this index.html saved omn the device.
 
