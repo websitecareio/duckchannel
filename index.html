@@ -9,7 +9,7 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="./css/bootstrap.min.css">
 
-  <title>My Movie Library</title>
+  <title>Duck Entertainment</title>
 
   <style>
     html,
@@ -122,23 +122,24 @@
     }
 
     #listnotes {
-    list-style: none;
-    margin-left: -30px;
-}
-#listnotes .row {
-    color: #fff;
-    position: relative;
-    margin-bottom:10px;
-}
+      list-style: none;
+      margin-left: -30px;
+    }
 
-#listnotes .row:hover .removenote {
-  display:block !important;
-  position: absolute;
+    #listnotes .row {
+      color: #fff;
+      position: relative;
+      margin-bottom: 10px;
+    }
+
+    #listnotes .row:hover .removenote {
+      display: block !important;
+      position: absolute;
       top: 10%;
       right: 10%;
       z-index: 999;
       color: #424242;
-}
+    }
   </style>
 </head>
 
@@ -211,12 +212,12 @@
               style="color:#fff;text-decoration: underline;">GitHub</a></span>
             <br>
             <a class="" href="#" id="exportStreamData" onclick="exportStreamData()" target="_blank"
-              style="color:#424242;">Export stream 
+              style="color:#424242;">Export stream
               data</a> | <a class="" href="#" id="exportNotesData" onclick="exportNotesData()" target="_blank"
-              style="color:#424242;">Export notes 
-              data</a>  | <a class="" href="#" id="importData" data-target="#importModal" data-toggle="modal"
-              style="color:#424242;">Import data</a> | <a class="" href="#" id="importData"
-              onclick="return clearData()" style="color:#424242;">Remove all data</a>
+              style="color:#424242;">Export notes
+              data</a> | <a class="" href="#" id="importData" data-target="#importModal" data-toggle="modal"
+              style="color:#424242;">Import data</a> | <a class="" href="#" id="importData" onclick="return clearData()"
+              style="color:#424242;">Remove all data</a>
 
         </div>
 
@@ -405,15 +406,38 @@
       if (localStorage.getItem("duckdata") !== null) {
         // If it does, get the array and loop through the items
         var duckdata = JSON.parse(localStorage.getItem("duckdata"));
+
+        // o create an array of the IDs of each title, you can use the following code
+        var ids = [];
+
         for (var i = 0; i < duckdata.length; i++) {
+          ids.push({ title: duckdata[i].title, value: "" + i + "" });
+        }
+
+        console.log(ids); // Outputs [1, 2, 3]
+
+
+        // Sort the data by ascending numerical value
+        duckdata.sort(function (a, b) {
+          return b.lastclicked - a.lastclicked;
+        });
+
+        for (var i = 0; i < duckdata.length; i++) {
+
+          // Find the index of the item with the name "Bob"
+          var index = ids.findIndex(function (item) {
+            return item.title === duckdata[i].title;
+          });
+
           // Get the title value of each item
           var title = duckdata[i].title;
           var type = duckdata[i].type;
           var description = duckdata[i].description;
           var image = duckdata[i].image;
           var url = duckdata[i].url;
+          var lastclicked = duckdata[i].lastclicked;
           // Output the title value to the page
-          document.getElementById("listservicesrow").innerHTML += "<div class=\"col-md-3 px-4 py-4  listservicesrowitem\"><div class=\"innerdiv\"><a class=\"editlink\" style=\"display:none;\" href=\"#\" data-toggle=\"modal\" data-target=\"#editModal\" onclick=\"loadEditForm(event," + [i] + ")\">Edit</a><a class=\"removelink\" style=\"display:none;\" href=\"#\" onclick=\"return removeElement(event," + [i] + ")\">Remove</a><a href=\"" + url + "\" target=\"_blank\"><img src=\"" + image + "\"><span class=\"servicetitle  mx-4 my-4\">" + title + "</span></a></div></div>";
+          document.getElementById("listservicesrow").innerHTML += "<div class=\"col-md-3 px-4 py-4  listservicesrowitem\"><div class=\"innerdiv\"><a class=\"editlink\" style=\"display:none;\" href=\"#\" data-toggle=\"modal\" data-target=\"#editModal\" onclick=\"loadEditForm(event," + index + ")\">Edit</a><a class=\"removelink\" style=\"display:none;\" href=\"#\" onclick=\"return removeElement(event," + index + ")\">Remove</a><a href=\"" + url + "\" target=\"_blank\" onclick=\"openUrl(" + index + ")\"><img src=\"" + image + "\"><span class=\"servicetitle  mx-4 my-4\">" + title + "</span></a></div></div>";
         }
       }
     }
@@ -457,7 +481,8 @@
         type: type,
         description: description,
         image: image,
-        url: url
+        url: url,
+        lastclicked: 0
       };
 
       // Check if the movies array already exists in local storage
@@ -622,6 +647,7 @@
       duckdata[id].description = document.getElementById("descriptionInput").value;
       duckdata[id].image = document.getElementById("imageInput").value;
       duckdata[id].url = document.getElementById("urlInput").value;
+      duckdata[id].lastclicked = 0;
 
       // Update the element data in local storage
       localStorage.setItem("duckdata", JSON.stringify(duckdata));
@@ -677,26 +703,42 @@
 
     function removeNote(id) {
 
-if (confirm("Are you sure you want to remove this?")) {
-  // Clear all data from local storage
+      if (confirm("Are you sure you want to remove this?")) {
+        // Clear all data from local storage
 
-  var duckdata = JSON.parse(localStorage.getItem("ducknotes"));
+        var duckdata = JSON.parse(localStorage.getItem("ducknotes"));
 
-  // Remove the item from the collection
-  duckdata.splice(id, 1); // Start from, delete 1 item
+        // Remove the item from the collection
+        duckdata.splice(id, 1); // Start from, delete 1 item
 
-  // Store the updated collection in local storage
-  localStorage.setItem("ducknotes", JSON.stringify(duckdata));
-
-
-  return true;
-} else {
-  // Do not clear the data
-  return false;
-}
+        // Store the updated collection in local storage
+        localStorage.setItem("ducknotes", JSON.stringify(duckdata));
 
 
-}
+        return true;
+      } else {
+        // Do not clear the data
+        return false;
+      }
+
+
+    }
+
+    function openUrl(id) {
+
+      // Get the current timestamp
+      var timestamp = new Date().getTime();
+
+      var duckdata = JSON.parse(localStorage.getItem("duckdata"));
+
+      duckdata[id].lastclicked = timestamp;
+
+      // Update the element data in local storage
+      localStorage.setItem("duckdata", JSON.stringify(duckdata));
+
+
+    }
+
   </script>
 
 </body>
