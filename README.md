@@ -1,4 +1,4 @@
-# duckchannel
+# Duck Streamtab
 Live demo here: https://websitecareio.github.io/streamtab/
 The demo is the actual code from the index.html file, you can use it as your streamtab if you want or download the files and hosted it yourself.
 
