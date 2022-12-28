@@ -13,8 +13,10 @@ A notes section have been added becaccuse i swtich streaming services all the ti
 Images:
 There are some images for streaming services made, but you will need to get your own permissions to use them. You can use any image if you want, just by entering a different URL.
 
-## Buitl with
+## Built with
 It is made with HTML and Javascript using bootstrap to make sure it worked on all devices.
+
+90% of this have been made with the use of Chat GPT (ChatGPT Dec 15 Version) to test is functionality and how much it can do. My work here was mostly combining the code.
 
 ## Features
 * Export all streaming services
