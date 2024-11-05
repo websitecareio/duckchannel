@@ -1,6 +1,5 @@
 # Duck Streamtab
-Live demo here: https://websitecareio.github.io/streamtab/ ( Demo broken, dont know why. Just download and run the index.html , import data.txt so see it)
-The demo is the actual code from the index.html file, you can use it as your streamtab if you want or download the files and hosted it yourself.
+![image](https://github.com/user-attachments/assets/71bd9c6a-39d1-465d-8f09-7f1581c8fea9)
 
 ## Why a duck
 The question "Why a duck?" invites us to consider the various ways in which ducks (and other things) can be meaningful or significant, and to think about the underlying reasons for this significance... or simply put... Why not a duck.
